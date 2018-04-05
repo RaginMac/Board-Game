@@ -142,7 +142,6 @@ GameObject:
   - component: {fileID: 224009190751500022}
   - component: {fileID: 222443277548919558}
   - component: {fileID: 114998840171190384}
-  - component: {fileID: 114669840503846676}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -238,7 +237,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -248,7 +247,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300106, guid: 6054eb568320ead49b95802da6563fee, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -367,23 +366,6 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1245165656827232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab04cb6d0511496469e12830b21ed27c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: 
-  ip: 
-  color: 0
-  isSelected: 0
-  playerValue: 0
-  JoiningCost: 0
---- !u!114 &114669840503846676
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1840869578648894}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab04cb6d0511496469e12830b21ed27c, type: 3}

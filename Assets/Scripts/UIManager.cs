@@ -34,6 +34,10 @@ public class UIManager : MonoBehaviour
     public Image turnColorIndicator;
 
 	public Color red,blue,green,yellow;
+
+	public bool GameHasBeenOver;
+
+    public bool showCoinAnimation;
 	// Use this for initialization
 	void Start () 
     {
@@ -72,23 +76,24 @@ public class UIManager : MonoBehaviour
         EngGamePanel.SetActive(true);
         if (text.Contains("connection"))
         {
+			if(!GameHasBeenOver)
             StartCoroutine(EngGameConnectionLostSequence());
         }
         else
         {
+			GameHasBeenOver = true;
             for (int i = 0; i < FinishList.Count; i++)
             {
                 positionHolders[i].SetActive(true);
             }
             StartCoroutine(EndGameSequence());
         }
-//        ui_s.GameOver(Overtext);
 
     }
 
     IEnumerator EngGameConnectionLostSequence()
     {
-        for (float i = 0; i <= 1; i += Time.deltaTime)
+        for (float i = 0; i <= 1; i += 3f*Time.deltaTime)
         {
             Color col = endgameBG.GetComponent<Image>().color;
             col.a = i;
@@ -102,7 +107,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator EndGameSequence()
     {
-        for (float i = 0; i <= 1; i += Time.deltaTime)
+        for (float i = 0; i <= 1; i += 2*Time.deltaTime)
         {
             Color col = endgameBG.GetComponent<Image>().color;
             col.a = i;
@@ -116,6 +121,10 @@ public class UIManager : MonoBehaviour
         banner_r.SetActive(true);
         flame_l.SetActive(true);
         flame_r.SetActive(true);
+
+        flame_l.GetComponent<Image>().color = turnColorIndicator.color;
+        flame_r.GetComponent<Image>().color = turnColorIndicator.color;
+
         
         for (int i = 0; i < FinishList.Count; i++)
         {
@@ -130,7 +139,14 @@ public class UIManager : MonoBehaviour
             }
             Positiontexts[i].text = FinishList[i];
             Positiontexts[i].gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
+            if (i == 0)
+            {
+                if (showCoinAnimation)
+                {
+					positionHolders[0].GetComponent<Animator>().enabled = true;
+                }
+            }
+            yield return new WaitForSeconds(0.3f);
         }
 
         EndGameBackButton.interactable = true;

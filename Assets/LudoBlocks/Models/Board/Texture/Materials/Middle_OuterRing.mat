@@ -75,7 +75,7 @@ Material:
     - _DiffusePower: 1
     - _DstBlend: 0
     - _Emission: 1
-    - _EmissionStrength: 0.63279766
+    - _EmissionStrength: 0.79492456
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1

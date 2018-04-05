@@ -23,6 +23,12 @@ public class UIScript : MonoBehaviour
 	public string subject, body;
     public GameObject loadingScreen;
 
+	public QualityManager _qm;
+	public GameObject internetConn,ConLostScreen;
+	public int playercount;
+	public GameObject adAvailableBox;
+	public ToastMessage _tm;
+
 	public bool showQuit = false;
 	public static bool vibrate = true;
 
@@ -30,15 +36,7 @@ public class UIScript : MonoBehaviour
 	bool muteAudio = false, highGraphic = true; 
 	string muteSetting;
 
-	public QualityManager _qm;
 
-	public GameObject internetConn,ConLostScreen;
-
-	public int playercount;
-
-	public GameObject adAvailableBox;
-
-	public ToastMessage _tm;
 
 	void Awake()
 	{
@@ -125,14 +123,15 @@ public class UIScript : MonoBehaviour
 
 	void ShowPlayerSelectionError()
 	{
-		selectPlayerErrorMsg.SetActive (true);
-		Invoke ("HidePlayerSelectionError", 3f);
+        //selectPlayerErrorMsg.SetActive (true);
+        _tm.showToastOnUiThread("Please select a color and enter a name.");
+		//Invoke ("HidePlayerSelectionError", 3f);
 	}
 
-	void HidePlayerSelectionError()
-	{
-		selectPlayerErrorMsg.SetActive (false);
-	}
+	//void HidePlayerSelectionError()
+	//{
+	//	//selectPlayerErrorMsg.SetActive (false);
+	//}
 
 	public void ExitGame()
     {
@@ -232,37 +231,21 @@ public class UIScript : MonoBehaviour
 
 	public void OpenMultiplayerModeScreen(bool isLAN)
     {
-		onPressOkay ();
-		isSP = false;
-		PlayerSelection.isNetworkedGame = true;
-		NetworkTest.isLAN = isLAN;
+		if ((InternetChecker.internetConnectBool && !isLAN) || isLAN)
+		{
+			onPressOkay ();
+			isSP = false;
+			PlayerSelection.isNetworkedGame = true;
+			NetworkTest.isLAN = isLAN;
 
-		AudioManager.Instance.UIClick ();
-		SceneManager.LoadScene ("Main");
-
-//		if (isLAN) {
-//			if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork) {
-//				isSP = false;
-//				PlayerSelection.isNetworkedGame = true;
-//				NetworkTest.isLAN = isLAN;
-//
-//				AudioManager.Instance.UIClick ();
-//				SceneManager.LoadScene ("Main");
-//			} else {
-//				internetConn.SetActive (true);
-//			}
-//		}
-//		else 
-//		{
-//			isSP = false;
-//			PlayerSelection.isNetworkedGame = true;
-//			NetworkTest.isLAN = isLAN;
-//
-//			AudioManager.Instance.UIClick ();
-//			SceneManager.LoadScene ("Main");
-//		}
-        
-    }
+			AudioManager.Instance.UIClick ();
+			SceneManager.LoadScene ("Main");
+		} 
+		else if(!InternetChecker.internetConnectBool && !isLAN)
+		{
+			_tm.showToastOnUiThread("No internet connection");
+		}
+	}
 
 	public void OnAddPlayerbackend()
 	{
@@ -277,6 +260,7 @@ public class UIScript : MonoBehaviour
 		if(playercount == 0)
 		{
 			CoinManager.AwardCoins (CoinManager.justDeductedCoins);
+			CoinManager.justDeductedCoins = 0;
 			ConLostScreen.SetActive(true);
 			Invoke("LoadMainMenu", 1f);
 			NetworkManager.singleton.StopMatchMaker();
@@ -318,27 +302,36 @@ public class UIScript : MonoBehaviour
         else
         {
             sm.ConnectToGoogleService();
-            //print("has Authenticated? : " + SocialManager.IsConnectedtoGoogle.ToString());
-            //Not connected UI text
         }
     }
 
-	public void GetAudioAndGraphicSettingOnStart()
-	{
-		muteAudio = !(PlayerPrefs.GetInt ("MuteAudio") == 1);
-		if (audioBtn != null) {
-			AudioSetting ();
-		}
+    public void GetAudioAndGraphicSettingOnStart()
+    {
+        if (PlayerPrefs.HasKey("MuteAudio"))
+        { 
+            muteAudio = !(PlayerPrefs.GetInt("MuteAudio") == 1);
+            if (audioBtn != null) {
+                AudioSetting();
+            }
+        }
 
-		highGraphic = !(PlayerPrefs.GetInt ("HighGraphic") == 1);
-		if (graphicsBtn != null) {
-			ApplyGraphicSetting ();
-		}
+        if (PlayerPrefs.HasKey("HighGraphic"))
+        {
+            highGraphic = !(PlayerPrefs.GetInt("HighGraphic") == 1);
+            if (graphicsBtn != null)
+            {
+                ApplyGraphicSetting();
+            }
+        }
 
-		vibrate = !(PlayerPrefs.GetInt ("Vibrate") == 1);
-		if (vibrateBtn != null) {
-			SetVibrateSetting ();
-		}
+        if (PlayerPrefs.HasKey("Vibrate"))
+        {
+            vibrate = !(PlayerPrefs.GetInt("Vibrate") == 1);
+            if (vibrateBtn != null)
+            {
+                SetVibrateSetting();
+            }
+        }
 	}
 
 
@@ -353,14 +346,14 @@ public class UIScript : MonoBehaviour
 		if (muteAudio) 
 		{
 			audioBtn.GetComponent<Image> ().sprite = muteAudioImg;
-			_tm.showToastOnUiThread ("Sound Off");
+			//_tm.showToastOnUiThread ("Sound Off");
 			PlayerPrefs.SetInt ("MuteAudio", 1);
 		}
 		else if (!muteAudio)
 		{
 			//AudioManager.Instance.UIClick();
 			audioBtn.GetComponent<Image> ().sprite = unmuteAudioImg;
-			_tm.showToastOnUiThread ("Sound On");
+		//	_tm.showToastOnUiThread ("Sound On");
 			PlayerPrefs.SetInt("MuteAudio", 0);
 			//AudioManager.Instance.MuteAudioSources (false);
 		}
@@ -368,20 +361,56 @@ public class UIScript : MonoBehaviour
 	
 	}
 
-	public void SetVibrateSetting()
+    public void ShowAudioToastMessage()
+    {
+        if (muteAudio)
+        {
+            _tm.showToastOnUiThread("Sound Off");
+        }
+        else
+        {
+            _tm.showToastOnUiThread("Sound On");
+        }
+    }
+
+    public void ShowVibrateToastMessage()
+    {
+        if (vibrate)
+        {
+            _tm.showToastOnUiThread("Vibration On");
+        }
+        else
+        {
+            _tm.showToastOnUiThread("Vibration Off");
+        }
+    }
+
+    public void ShowGraphicToastMessage()
+    {
+        if (highGraphic)
+        {
+            _tm.showToastOnUiThread("High Graphics");
+        }
+        else
+        {
+            _tm.showToastOnUiThread("Low Graphics");
+        }
+    }
+
+    public void SetVibrateSetting()
 	{
 		vibrate = !vibrate;
 
 		if (vibrate)
 		{
 			vibrateBtn.GetComponent<Image> ().sprite = vibrateOnImg;
-			_tm.showToastOnUiThread ("Vibration On");
+			//_tm.showToastOnUiThread ("Vibration On");
 			PlayerPrefs.SetInt ("Vibrate", 1);
 		}
 		else if (!vibrate)
 		{
 			vibrateBtn.GetComponent<Image> ().sprite = vibrateOffImg;
-			_tm.showToastOnUiThread ("Vibration Off");
+			//_tm.showToastOnUiThread ("Vibration Off");
 			PlayerPrefs.SetInt ("Vibrate", 0);
 		}
 	}
@@ -434,14 +463,14 @@ public class UIScript : MonoBehaviour
 		{
 			graphicsBtn.GetComponent<Image> ().sprite = highGraphicImg;
 			PlayerPrefs.SetInt ("HighGraphic", 1);
-			_tm.showToastOnUiThread ("High Graphics");
+			//_tm.showToastOnUiThread ("High Graphics");
 			_qm.SetHighResolution ();		
 		}
 		else
 		{
 			graphicsBtn.GetComponent<Image> ().sprite = lowGraphicImg;
 			PlayerPrefs.SetInt ("HighGraphic", 0);
-			_tm.showToastOnUiThread ("Low Graphics");
+			//_tm.showToastOnUiThread ("Low Graphics");
 			_qm.setLowResolution ();
 		}
 		AudioManager.Instance.UIClick();

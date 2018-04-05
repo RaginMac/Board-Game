@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 6054eb568320ead49b95802da6563fee
-timeCreated: 1522323390
+timeCreated: 1522736747
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -65,6 +65,11 @@ TextureImporter:
     21300116: SpriteSheet_New_01_58
     21300118: SpriteSheet_New_01_59
     21300120: SpriteSheet_New_01_60
+    21300122: SpriteSheet_New_01_61
+    21300124: SpriteSheet_New_01_62
+    21300126: SpriteSheet_New_01_63
+    21300128: SpriteSheet_New_01_64
+    21300130: SpriteSheet_New_01_65
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -995,7 +1000,7 @@ TextureImporter:
         width: 421
         height: 89
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1008,6 +1013,76 @@ TextureImporter:
         y: 703
         width: 210
         height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheet_New_01_61
+      rect:
+        serializedVersion: 2
+        x: 1299
+        y: 1183
+        width: 109
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheet_New_01_62
+      rect:
+        serializedVersion: 2
+        x: 1409
+        y: 1183
+        width: 112
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheet_New_01_63
+      rect:
+        serializedVersion: 2
+        x: 1298
+        y: 1070
+        width: 110
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheet_New_01_64
+      rect:
+        serializedVersion: 2
+        x: 1411
+        y: 1070
+        width: 105
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SpriteSheet_New_01_65
+      rect:
+        serializedVersion: 2
+        x: 1175
+        y: 1057
+        width: 106
+        height: 111
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

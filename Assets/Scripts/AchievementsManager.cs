@@ -25,8 +25,10 @@ public class AchievementsManager : MonoBehaviour
 
     void ShowDebugText(string text)
     {
-        debugText.text = text;
-        Invoke("removeText", 2f);
+		if (debugText != null) {
+			debugText.text = text;
+			Invoke ("removeText", 2f);
+		}
     }
 
     void removeText()

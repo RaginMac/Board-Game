@@ -36,8 +36,10 @@ public class NavigateScreens : MonoBehaviour {
 
     public void GoBackScreen()
     {
-		if (PlayerSelection.isNetworkedGame) {
+		if (PlayerSelection.isNetworkedGame) 
+		{
 			CoinManager.AwardCoins (CoinManager.justDeductedCoins);		//if person joined a nw match and match did not start
+			CoinManager.justDeductedCoins = 0;
 		}
 
 

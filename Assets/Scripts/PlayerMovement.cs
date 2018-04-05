@@ -383,6 +383,10 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
+						if (target.gameObject.GetComponent<WaypointScript> ().isSafeBox)
+						{
+							AudioManager.Instance.PlayShieldAudio();
+						}
                         GameObject obj = target.gameObject.GetComponent<WaypointScript>().SetPlayerOccupy(this.gameObject, false);
                         if (obj != null)
                         {

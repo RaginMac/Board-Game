@@ -6,11 +6,12 @@ public class InternetChecker : MonoBehaviour
 	private const bool allowCarrierDataNetwork = false;
 	private const string pingAddress = "8.8.8.8"; // Google Public DNS server
 	private const float waitingTime = 5.0f;
-	public static bool internetConnectBool;
+	public static bool internetConnectBool = false;
 	private Ping ping;
 	private float pingStartTime;
 
 	public UIScript _ui;
+    public ToastMessage _tm;
 
     public Text connAvailabilityText;
     public GameObject ConnectionLostPanel;
@@ -22,14 +23,16 @@ public class InternetChecker : MonoBehaviour
         if (ConnectionLostPanel != null)
             ConnectionLostPanel.SetActive(false);
 
-        if (_ui == null && !NetworkTest.isLAN)
+		if (!NetworkTest.isLAN)  //_ui == null && 
             InvokeRepeating("CheckInternetAvailability", 0.5f, 2f);
+
+
         //CheckInternetAvailability();
     }
 
     public void CheckInternetAvailability()
 	{
-		print ("Checking");
+		//print ("Checking");
 		bool internetPossiblyAvailable;
 		switch (Application.internetReachability)
 		{
@@ -79,7 +82,7 @@ public class InternetChecker : MonoBehaviour
 
         if (_ui != null)
         { 
-            CheckIfInternet();
+            //CheckIfInternet();
         }
         else
         {
@@ -87,7 +90,7 @@ public class InternetChecker : MonoBehaviour
             {
                 ConnectionLostPanel.SetActive(true);
                 Invoke("WhenConnectionLost", 1f);
-                Debug.Log("GoToMainMenu");
+               // Debug.Log("GoToMainMenu");
             }
         }
 
@@ -101,18 +104,15 @@ public class InternetChecker : MonoBehaviour
 
 		internetConnectBool = true;
 
-        if (_ui != null)
-		    _ui.OpenMultiplayerModeScreen (false);	//open new scene only if internet is available.
+//        if (_ui != null)
+//		    _ui.OpenMultiplayerModeScreen (false);	//open new scene only if internet is available.
 		//temp.text = internetConnectBool.ToString ();
 	}
 
+
     public void CheckIfInternet()
     {
-        if (connAvailabilityText != null)
-        {
-            connAvailabilityText.gameObject.SetActive(true);
-            Invoke("HideMessage", 3f);
-        }
+        _tm.showToastOnUiThread("No internet connection");
     }
 
     void HideMessage()

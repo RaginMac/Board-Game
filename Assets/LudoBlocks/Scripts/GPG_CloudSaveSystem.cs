@@ -49,14 +49,18 @@ public class GPG_CloudSaveSystem : MonoBehaviour{
 //	
 	}
 
+	SocialManager _sm;
 
-	public void StartLoadingData()
+	public void StartLoadingData(SocialManager in_sm)
 	{
+		_sm = in_sm;
+
 		m_saveName = GetComponent<ItemManager> ().PlayerprefKey;
-		if (!PlayerPrefs.HasKey ("JustInstalled"))
-		{	
+		//if (!PlayerPrefs.HasKey ("JustInstalled"))
+		{
+            print("We are loading data form cloud");
 			LoadFromCloud ();
-			PlayerPrefs.SetInt ("JustInstalled", 1);
+			
 		}
 
 	}
@@ -79,8 +83,12 @@ public class GPG_CloudSaveSystem : MonoBehaviour{
 
 		if (progress == "1") 
 		{
+			print ("progess");
 			GetComponent<ItemManager> ().ItemWasBought ();
+			PlayerPrefs.SetInt("JustInstalled", 1);
+//			_sm.GetLoadData ();
 		}
+		_sm.GetLoadData ();
 	}
 
 	//load save from cloud

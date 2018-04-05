@@ -31,8 +31,8 @@ public class CoinManager : MonoBehaviour {
 
     public static void Init()
     {
-//		PlayerPrefs.DeleteAll();
-		//AwardCoins(50);
+        //PlayerPrefs.DeleteAll();
+        //AwardCoins(50);
         CoinsText = GameObject.Find ("NoOfCoins_txt").GetComponent<Text> ();	
 
 		if (PlayerPrefs.HasKey ("NumberOfCoins") && CoinsText != null)

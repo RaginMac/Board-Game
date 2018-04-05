@@ -20,6 +20,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip diceRoll;
     public AudioClip victroyAudio;
     public AudioClip clickObjectAudio;
+	public AudioClip shieldAudio;
 
     public AudioClip clickUI;
 
@@ -142,6 +143,13 @@ public class AudioManager : MonoBehaviour
            // pawnAudioSource1.loop = false;
         }
     }
+
+	public void PlayShieldAudio()
+	{
+		pawnAudioSource2.Stop ();
+		pawnAudioSource2.clip = shieldAudio;
+		pawnAudioSource2.Play ();
+	}
 
     public void PawnDeath()
     {

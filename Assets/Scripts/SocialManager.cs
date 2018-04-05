@@ -15,6 +15,12 @@ public class SocialManager : MonoBehaviour {
 	public GameObject[] allBoards;
 	public GameObject loadSaveScreen;
 
+	public InternetChecker _icScript;
+
+	int syncCount = 0;
+
+	Ping ping;
+
     private void Awake()
     {
 		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder ()
@@ -25,51 +31,101 @@ public class SocialManager : MonoBehaviour {
 
         //------------------ recommended for debugging:-------------------------------
 
-        PlayGamesPlatform.DebugLogEnabled = true;
+        //PlayGamesPlatform.DebugLogEnabled = true;
       
       ////------------------Activate the Google Play Games platform--------------------------
         PlayGamesPlatform.Activate();
       
-        ConnectToGoogleService();
+        //ConnectToGoogleService();
 		//LoadAllData ();
+
+		//StartCoroutine(CheckInternet());
+		//CheckInternet();
+		InvokeRepeating("CheckInternet", 0f, 2f);
     }
+
+
+	void CheckInternet()
+	{
+//		ping = new Ping("8.8.8.8");
+//		yield return new WaitForSeconds (0.5f);
+//		if (ping.time == -1) {
+//			Debug.Log ("Ping time is\t"+ping.time);
+//			StartCoroutine (CheckInternet ());
+//		} 
+//		else 
+//		{
+//			Debug.Log ("Ping time is\t"+ping.time);
+//			ConnectToGoogleService ();
+//		}
+		Debug.Log("Checking for internet from social manager");
+
+		if (InternetChecker.internetConnectBool)
+		{
+			//StartCoroutine (CheckInternet ());
+
+			ConnectToGoogleService();
+
+		}
+
+	}
 
     public void ConnectToGoogleService()
     {
 		if (!IsConnectedtoGoogle) 
 		{
-			Social.localUser.Authenticate (
+			Social.localUser.Authenticate 
+			(
 				(bool success) => {
 					IsConnectedtoGoogle = success;
-					//LoadAllData();
+					Debug.Log("Is Connected to google\t"+ IsConnectedtoGoogle);
+
+					if(IsConnectedtoGoogle){
+						SyncBoardData();
+					}
+
 			});
-			
-			
 		} 
-
-		if (!PlayerPrefs.HasKey ("JustInstalled")) {
-			Invoke ("LoadAllData", 3f);
-		}
-
+		CancelInvoke ("CheckInternet");
     }
 
+	public void SyncBoardData()
+	{
+		if (!PlayerPrefs.HasKey ("JustInstalled")) 
+		{
+			Invoke ("LoadAllData", 1f);
+		}
+	}
 
-
-	public void LoadAllData()
+    public void LoadAllData()
 	{
 		loadSaveScreen.SetActive(true);
-		Invoke ("LoadComplete", 6f);
+		//Invoke ("LoadComplete", 6f);
 		for (int i = 0; i < allBoards.Length; i++)
 		{
-			allBoards [i].GetComponent<GPG_CloudSaveSystem> ().StartLoadingData ();	
+			allBoards [i].GetComponent<GPG_CloudSaveSystem> ().StartLoadingData (this);	
 		}
+       
 
+
+		print("Is playerpref created ? " + PlayerPrefs.HasKey("JustInstalled"));
+    }
+
+	public void GetLoadData()
+	{
+		print ("Receive load data");
+		syncCount++;
+		if (syncCount == allBoards.Length) 
+		{
+			LoadComplete ();
+		}
 	}
 
 	void LoadComplete()
 	{
 		//this.gameObject.SetActive (false);
+
 		loadSaveScreen.SetActive(false);
 	}
 
-}
+ }

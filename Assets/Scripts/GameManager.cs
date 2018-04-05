@@ -365,6 +365,10 @@ public class GameManager : MonoBehaviour
         {
             if (totalPlayersPlayingCount == 1)
             {
+				if (Application.internetReachability == NetworkReachability.NotReachable) 
+				{
+					totalRewardCoins = 0; 
+				}
                 ui_m.OnGameOver("connection lost");
 				CoinManager.AwardCoins (totalRewardCoins);
 				totalRewardCoins = 0;
@@ -386,14 +390,16 @@ public class GameManager : MonoBehaviour
             {
                 if (PlayerSelection.isNetworkedGame)
                 {
+                    GetComponent<UIManager>().showCoinAnimation = true;
 					CoinManager.AwardCoins (totalRewardCoins);
 					totalRewardCoins = 0;//Award coins on winning..to test
                     am.FirstMultiPlayerWin();
                 }
                 else
                 {
+					GetComponent<UIManager>().showCoinAnimation = true;
                     am.FirstSinglePlayerWin();
-                    CoinManager.AwardCoins(10);
+                    CoinManager.AwardCoins(20);	//Award coins on single player win
 
                 }
             }

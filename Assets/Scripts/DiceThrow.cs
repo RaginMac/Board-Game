@@ -155,7 +155,7 @@ public class DiceThrow : MonoBehaviour
 
     IEnumerator FadeMaterial(bool fadeAway, float TimeToFade)
     {
-        Material mat = GetComponent<MeshRenderer>().material;
+        Material mat = transform.GetChild(0).GetComponent<MeshRenderer>().material;
         // fade from opaque to transparent
         if (fadeAway)
         {

@@ -181,6 +181,12 @@ public class LobbyManager : NetworkBehaviour
 	void Start () 
     {
 		//print("From lobby : " + SelectPlayField.whichBoard);
+		if (!isServer) {
+			CoinManager.DeductCoins (JoinAmount);
+			CoinManager.justDeductedCoins = JoinAmount;
+
+		}
+
 		playerDataArray = new List<PlayerStruct> ();
 
 		P1Field = GameObject.Find("P1").GetComponent<InputField>();
