@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
 
     public void InitializeGame()
     {
+		CoinManager.justDeductedCoins = 0;
 		totalPlayers.Clear();
         playerNames.Clear();
         Debug.Log(SelectPlayField.whichBoard);
@@ -197,13 +198,16 @@ public class GameManager : MonoBehaviour
 
     public void SetNextTurn()
     {
+        Debug.Log("Setting Next Turn");
         lockedplayers = 0;
+
         if (playerIndex < 0)
         {
             playerIndex = totalPlayers.IndexOf(currentPlayerTurn);
         }
         if (playerIndex < totalPlayers.Count - 1)
         {
+            playerIndex = totalPlayers.IndexOf(currentPlayerTurn);
             playerIndex++;
         }
         else
@@ -212,6 +216,7 @@ public class GameManager : MonoBehaviour
         }
 
         currentPlayerTurn = totalPlayers[playerIndex];
+
         if (!CheckAITurn())
         {
             ui_m.ActivateSpinButton();  
@@ -242,8 +247,6 @@ public class GameManager : MonoBehaviour
             {
                 if (lockedplayers == 4)
                 {
-//                    SetNextTurn();
-//                    EventManager.PlayerSelected();
 					Invoke("ChangeTurn", 1f);
                 }
             }
@@ -365,20 +368,14 @@ public class GameManager : MonoBehaviour
         {
             if (totalPlayersPlayingCount == 1)
             {
-				if (Application.internetReachability == NetworkReachability.NotReachable) 
-				{
-					totalRewardCoins = 0; 
-				}
-                ui_m.OnGameOver("connection lost");
-				CoinManager.AwardCoins (totalRewardCoins);
-				totalRewardCoins = 0;
+				ui_m.OnGameLost ();
             }
         }
     }
 
     public void OnLoosingServer()
     {
-        ui_m.OnGameOver("connection lost");
+        ui_m.OnGameLost();
     }
 
     void OnFinish()
@@ -399,7 +396,7 @@ public class GameManager : MonoBehaviour
                 {
 					GetComponent<UIManager>().showCoinAnimation = true;
                     am.FirstSinglePlayerWin();
-                    CoinManager.AwardCoins(20);	//Award coins on single player win
+                    CoinManager.AwardCoins(50);	//Award coins on single player win
 
                 }
             }
@@ -407,6 +404,7 @@ public class GameManager : MonoBehaviour
             {
                 am.Unlucky();
             }
+                
         }
 
         if (totalFinishCount == totalPlayersPlayingCount - 1)
@@ -467,10 +465,11 @@ public class GameManager : MonoBehaviour
             {
                 OnMoveFinished(null);
             }
-
-
         }
     }
+
+
+    int turnindex_FinishedPlayer;
     public void CountPawnsAtHome()
     {
         switch (currentPlayerTurn)
@@ -482,15 +481,15 @@ public class GameManager : MonoBehaviour
                     int index = totalPlayers.IndexOf(currentPlayerTurn);
                     ui_m.FinishList.Add(playerNames[index]);
                     totalFinishCount++;
+                    OnFinish();
                     playerNames.Remove(playerNames[index]);
                     totalPlayers.Remove(PawnColor.c_Blue);
-                    OnFinish();
                 }
                 else
                 {
                     if (blueHomeCount < 4)
                     {
-                        OnMoveFinished(this.gameObject);
+                          OnMoveFinished(this.gameObject);
                     }
                 }
                 break;
@@ -501,9 +500,9 @@ public class GameManager : MonoBehaviour
                     int index = totalPlayers.IndexOf(currentPlayerTurn);
                     ui_m.FinishList.Add(playerNames[index]);
                     totalFinishCount++;
+                    OnFinish();
                     playerNames.Remove(playerNames[index]);
                     totalPlayers.Remove(PawnColor.c_Red);
-                    OnFinish();
                 }
                 else
                 {
@@ -520,9 +519,9 @@ public class GameManager : MonoBehaviour
                     int index = totalPlayers.IndexOf(currentPlayerTurn);
                     ui_m.FinishList.Add(playerNames[index]);
                     totalFinishCount++;
+                    OnFinish();
                     playerNames.Remove(playerNames[index]);
                     totalPlayers.Remove(PawnColor.c_Yellow);
-                    OnFinish();
                 }
                 else
                 {
@@ -539,9 +538,10 @@ public class GameManager : MonoBehaviour
                     int index = totalPlayers.IndexOf(currentPlayerTurn);
                     ui_m.FinishList.Add(playerNames[index]);
                     totalFinishCount++;
+                    OnFinish();
                     playerNames.Remove(playerNames[index]);
                     totalPlayers.Remove(PawnColor.c_Green);
-                    OnFinish();
+
                 }
                 else
                 {

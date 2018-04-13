@@ -269,6 +269,7 @@ public class LobbyManager : NetworkBehaviour
                ConLostScreen.SetActive(true);
 
 				CoinManager.AwardCoins (CoinManager.justDeductedCoins);		//if player dcs from lobby screen
+				CoinManager.justDeductedCoins = 0;
                
 				Invoke("LoadMainMenu", 1f);
 				

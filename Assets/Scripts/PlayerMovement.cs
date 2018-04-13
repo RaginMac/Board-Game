@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float JumpHeight;
 
-
+    public static bool tapped = false;
 
 	// Use this for initialization
 	void Start () 
@@ -279,7 +279,7 @@ public class PlayerMovement : MonoBehaviour
             animationChild.GetComponent<Animator>().SetBool("animate", false);
             showCanSelect.Stop();
 
-            if (gm.currentPlayer == this.gameObject)
+            if (gm.currentPlayer != this.gameObject && gm.currentPlayerTurn == color)
             {
                 //Statue Achievement Check
                 if (color == PlayerSelection.playerColor)
@@ -301,6 +301,8 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+
+        tapped = false;
     }
 
     public bool reachedPeak;
@@ -473,6 +475,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnMouseDown()
     {
+        if (tapped)
+        {
+            return;
+        }
+
+        tapped = true;
         if (!isLocked)
         {
             if (gm.currentPlayer == null)

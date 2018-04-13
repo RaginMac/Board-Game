@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
 
 	public Color red,blue,green,yellow;
 
-	public bool GameHasBeenOver;
+	public bool GameHasBeenOver = false;
 
     public bool showCoinAnimation;
 	// Use this for initialization
@@ -68,27 +68,29 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+    public void OnGameLost()
+    {
+        if (GameHasBeenOver)
+        {
+            return;
+        }
+			
+		GameHasBeenOver = true;
+        EngGamePanel.SetActive(true);
+        StartCoroutine(EngGameConnectionLostSequence());
+
+    }
+
     public void OnGameOver(string text)
     {
+		if (GameHasBeenOver) 
+		{
+			return;
+		}
 		AnalyticsResult result = Analytics.CustomEvent ("GameEnd");
 
-		print ("game end analytics result : " + result);
-        EngGamePanel.SetActive(true);
-        if (text.Contains("connection"))
-        {
-			if(!GameHasBeenOver)
-            StartCoroutine(EngGameConnectionLostSequence());
-        }
-        else
-        {
-			GameHasBeenOver = true;
-            for (int i = 0; i < FinishList.Count; i++)
-            {
-                positionHolders[i].SetActive(true);
-            }
-            StartCoroutine(EndGameSequence());
-        }
-
+		StartCoroutine(EndGameSequence());
     }
 
     IEnumerator EngGameConnectionLostSequence()
@@ -107,49 +109,61 @@ public class UIManager : MonoBehaviour
 
     IEnumerator EndGameSequence()
     {
-        for (float i = 0; i <= 1; i += 2*Time.deltaTime)
-        {
-            Color col = endgameBG.GetComponent<Image>().color;
-            col.a = i;
-            endgameBG.GetComponent<Image>().color = col;
-            flameholder_l.GetComponent<Image>().color = col;
-            flameholder_r.GetComponent<Image>().color = col;
-            yield return null;
-        }
-        EngGamePanel.GetComponent<Animator>().enabled = true;
-        banner_l.SetActive(true);
-        banner_r.SetActive(true);
-        flame_l.SetActive(true);
-        flame_r.SetActive(true);
+		yield return new WaitForSeconds (2f);
+		if (!GameHasBeenOver) 
+		{
+			GameHasBeenOver = true;
 
-        flame_l.GetComponent<Image>().color = turnColorIndicator.color;
-        flame_r.GetComponent<Image>().color = turnColorIndicator.color;
+			EngGamePanel.SetActive(true);
+			for (int i = 0; i < FinishList.Count; i++)
+			{
+				positionHolders[i].SetActive(true);
+			}
+			for (float i = 0; i <= 1; i += 2*Time.deltaTime)
+			{
+				Color col = endgameBG.GetComponent<Image>().color;
+				col.a = i;
+				endgameBG.GetComponent<Image>().color = col;
+				flameholder_l.GetComponent<Image>().color = col;
+				flameholder_r.GetComponent<Image>().color = col;
+				yield return null;
+			}
+			EngGamePanel.GetComponent<Animator>().enabled = true;
+			banner_l.SetActive(true);
+			banner_r.SetActive(true);
+			flame_l.SetActive(true);
+			flame_r.SetActive(true);
 
+			flame_l.GetComponent<Image>().color = turnColorIndicator.color;
+			flame_r.GetComponent<Image>().color = turnColorIndicator.color;
+
+
+			for (int i = 0; i < FinishList.Count; i++)
+			{
+				positionHolders[i].SetActive(true);
+				for (float j = 0; j <= 1; j += Time.deltaTime)
+				{
+					Color col = positionHolders[i].GetComponent<Image>().color;
+					col.a = j;
+					positionHolders[i].GetComponent<Image>().color = col;
+					badges[i].color = col;
+					yield return null;
+				}
+				Positiontexts[i].text = FinishList[i];
+				Positiontexts[i].gameObject.SetActive(true);
+				if (i == 0)
+				{
+					if (showCoinAnimation)
+					{
+						positionHolders[0].GetComponent<Animator>().enabled = true;
+					}
+				}
+				yield return new WaitForSeconds(0.3f);
+			}
+
+			EndGameBackButton.interactable = true;
+		}
         
-        for (int i = 0; i < FinishList.Count; i++)
-        {
-            positionHolders[i].SetActive(true);
-            for (float j = 0; j <= 1; j += Time.deltaTime)
-            {
-                Color col = positionHolders[i].GetComponent<Image>().color;
-                col.a = j;
-                positionHolders[i].GetComponent<Image>().color = col;
-                badges[i].color = col;
-                yield return null;
-            }
-            Positiontexts[i].text = FinishList[i];
-            Positiontexts[i].gameObject.SetActive(true);
-            if (i == 0)
-            {
-                if (showCoinAnimation)
-                {
-					positionHolders[0].GetComponent<Animator>().enabled = true;
-                }
-            }
-            yield return new WaitForSeconds(0.3f);
-        }
-
-        EndGameBackButton.interactable = true;
     }
 
     public void ActivateSpinButton()

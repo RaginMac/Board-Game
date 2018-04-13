@@ -109,7 +109,7 @@ public class UIScript : MonoBehaviour
 			}
 			else
 			{
-				ShowPlayerSelectionError ();
+				ShowPlayerSelectionError ("Please select a color and enter a name.");
 			}
 		} 
 		else
@@ -118,13 +118,17 @@ public class UIScript : MonoBehaviour
 			if (UIScript.numberOfPlayers == PlayerSelection.playerSelected) {
 				LudoLoader.instance.LevelLoaderCall (SelectPlayField.whichLevel);
 			}
+			else
+			{
+				ShowPlayerSelectionError ("Please select " + UIScript.numberOfPlayers.ToString() + " players to start.");
+			}
 		}
     }
 
-	void ShowPlayerSelectionError()
+	void ShowPlayerSelectionError(string err)
 	{
         //selectPlayerErrorMsg.SetActive (true);
-        _tm.showToastOnUiThread("Please select a color and enter a name.");
+		_tm.showToastOnUiThread(err);
 		//Invoke ("HidePlayerSelectionError", 3f);
 	}
 
@@ -258,9 +262,10 @@ public class UIScript : MonoBehaviour
 		print ("Playercount" + playercount);
 
 		if(playercount == 0)
-		{
+		{ 
 			CoinManager.AwardCoins (CoinManager.justDeductedCoins);
 			CoinManager.justDeductedCoins = 0;
+
 			ConLostScreen.SetActive(true);
 			Invoke("LoadMainMenu", 1f);
 			NetworkManager.singleton.StopMatchMaker();

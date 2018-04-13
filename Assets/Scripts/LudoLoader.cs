@@ -27,7 +27,7 @@ public class LudoLoader : MonoBehaviour {
             if (SplashPlayer != null)
             {
                 SplashPlayer.SetActive(true);
-                // SplashPlayer.GetComponent<Animation>().Play();
+                //SplashPlayer.GetComponent<Animation>().Play();
                 //Invoke("RemoveSplash", SplashPlayer.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0).Length*1.5f);
                 Invoke("RemoveSplash", 3.5f);
             }
